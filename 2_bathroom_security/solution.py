@@ -27,9 +27,10 @@ def decode(instructions):
 
     code.append(KEYPAD[current_index[1]][current_index[0]])
 
-  print "".join(map(str, code))
+  return "".join(map(str, code))
 
-# decode(["ULL", "RRDDD", "LURDL", "UUUUD"])
+# assert decode(["ULL", "RRDDD", "LURDL", "UUUUD"]) == "1985"
+assert decode(["ULL", "RRDDD", "LURDL", "UUUUD"]) == "5DB3"
 
 steps = open("input.dat").read().strip().split("\n")
-decode(steps)
+print decode(steps)
