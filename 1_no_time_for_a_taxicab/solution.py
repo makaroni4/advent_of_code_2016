@@ -27,15 +27,15 @@ def calculate_distance(steps):
       else:
         visited_locations.add(to_key(coordinates))
 
-  print "Bunny HQ is %d blocks away" % np.absolute(coordinates).sum()
+  return np.absolute(coordinates).sum()
 
-# calculate_distance(["R2"])
-# calculate_distance(["L2"])
-# calculate_distance(["R2", "R3"])
-# calculate_distance(["R2", "R2", "R2"])
-# calculate_distance(["R5", "L5", "R5", "R3"])
-# calculate_distance(["R2", "R2", "R2", "R2"])
-# calculate_distance(["R8", "R4", "R4", "R8"])
+assert calculate_distance(["R2"]) == 2
+assert calculate_distance(["L2"]) == 2
+assert calculate_distance(["R2", "R3"]) == 5
+assert calculate_distance(["R2", "R2", "R2"]) == 2
+assert calculate_distance(["R5", "L5", "R5", "R3"]) == 12
+assert calculate_distance(["R2", "R2", "R2", "R2"]) == 0
+# assert calculate_distance(["R8", "R4", "R4", "R8"])
 
 steps = open("input.dat").read().strip().split(", ")
-calculate_distance(steps)
+print calculate_distance(steps)
