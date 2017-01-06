@@ -68,6 +68,9 @@ for command in commands:
 
 print sum([1 for pixel in flatten(display) if pixel == "*"])
 
+for row in display:
+  print "".join(row)
+
 
 
 
