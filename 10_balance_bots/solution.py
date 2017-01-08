@@ -47,14 +47,14 @@ def process_instructions(instructions):
       if len(values[high_bot_id]) == 2:
         compare_queue.append(high_bot_id)
 
-  return dict([(":".join(map(str, v)), k) for k, v in values.iteritems()])
+  return dict([(repr(v), k) for k, v in values.iteritems()])
 
 assert process_instructions(["value 5 goes to bot 2",
                              "bot 2 gives low to bot 1 and high to bot 0",
                              "value 3 goes to bot 1",
                              "bot 1 gives low to output 1 and high to bot 0",
                              "bot 0 gives low to output 2 and high to output 0",
-                             "value 2 goes to bot 2"])["2:5"] == 2
+                             "value 2 goes to bot 2"])[repr([2, 5])] == 2
 
 instructions = open("input.dat").read().strip().split("\n")
-print process_instructions(instructions)["17:61"]
+print process_instructions(instructions)[repr([17, 61])]
