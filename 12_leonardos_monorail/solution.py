@@ -8,14 +8,7 @@ def extract_register_value(registers, id):
   else:
     return registers[id]
 
-def process(instructions):
-  registers = {
-    "a": 0,
-    "b": 0,
-    "c": 0,
-    "d": 0
-  }
-
+def process(registers, instructions):
   i = 0
   while i < len(instructions):
     instruction = instructions[i]
@@ -46,7 +39,11 @@ def process(instructions):
 
   return registers
 
-assert process(["cpy 41 a", "inc a", "inc a", "dec a", "jnz a 2", "dec a"])["a"] == 42
+assert process(
+    {"a": 0, "b": 0, "c": 0, "d": 0},
+    ["cpy 41 a", "inc a", "inc a", "dec a", "jnz a 2", "dec a"]
+  )["a"] == 42
 
 instructions = open("input.dat").read().strip().split("\n")
-print(process(instructions)["a"])
+print(process({"a": 0, "b": 0, "c": 0, "d": 0}, instructions)["a"])
+print(process({"a": 0, "b": 0, "c": 1, "d": 0}, instructions)["a"])
