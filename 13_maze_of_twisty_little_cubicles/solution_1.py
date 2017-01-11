@@ -1,5 +1,5 @@
-import numpy
 from heapq import *
+import operator
 
 def is_closed_space(fav_number, x, y):
   val = x*x + 3*x + 2*x*y + y + y*y + fav_number
@@ -18,6 +18,31 @@ def reconstruct_path(current, came_from):
 
   return shortest_path
 
+def print_route(fav_number, start, shortest_path):
+  office = []
+  max_j = max(shortest_path, key = operator.itemgetter(0))[0]
+  max_i = max(shortest_path, key = operator.itemgetter(1))[1]
+
+  for i in range(0, max_i + 5):
+    row = []
+
+    for j in range(0, max_j + 5):
+      if is_closed_space(fav_number, j, i):
+        row.append("#")
+      else:
+        row.append(".")
+
+    office.append(row)
+
+  office[start[1]][start[0]] = "O"
+  for i, j in shortest_path:
+    office[j][i] = "O"
+
+  for row in office:
+    print "".join(row)
+
+  print len(shortest_path)
+
 def astar(fav_number, start, goal):
   neighbors = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
@@ -32,7 +57,10 @@ def astar(fav_number, start, goal):
     current = heappop(open_set)[1]
 
     if current == goal:
-      return reconstruct_path(current, came_from)
+      shortest_path = reconstruct_path(current, came_from)
+      print_route(fav_number, start, shortest_path)
+
+      return shortest_path
 
     closed_set.add(current)
 
@@ -63,4 +91,4 @@ def astar(fav_number, start, goal):
 
 assert len(astar(10, (1, 1), (7, 4))) == 11
 
-print(len(astar(1358, (1, 1), (31, 39))))
+astar(1358, (1, 1), (31, 39))
