@@ -18,5 +18,5 @@ def find_lucky_elf(queue):
 assert find_lucky_elf(range(0, 4)) == 1
 assert find_lucky_elf(range(0, 5)) == 3
 
-print find_lucky_elf(range(0, 3014603))
+print(find_lucky_elf(range(0, 3014603)))
 
