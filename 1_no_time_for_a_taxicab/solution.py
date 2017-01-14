@@ -23,7 +23,7 @@ def calculate_distance(steps):
 
       if not visited_twice and to_key(coordinates) in visited_locations:
         visited_twice = True
-        print "First location visited twice is %d blocks away" % np.absolute(coordinates).sum()
+        print("First location visited twice is %d blocks away" % np.absolute(coordinates).sum())
       else:
         visited_locations.add(to_key(coordinates))
 
@@ -38,4 +38,4 @@ assert calculate_distance(["R2", "R2", "R2", "R2"]) == 0
 # assert calculate_distance(["R8", "R4", "R4", "R8"])
 
 steps = open("input.dat").read().strip().split(", ")
-print calculate_distance(steps)
+print(calculate_distance(steps))

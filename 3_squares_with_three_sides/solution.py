@@ -10,20 +10,20 @@ def is_valid_triangle(sides):
          sides[2] < sides[0] + sides[1]
 
 def count_valid_triangles(triangles):
-  return sum(map(is_valid_triangle, triangles))
+  return sum(list(map(is_valid_triangle, triangles)))
 
 assert is_valid_triangle([3, 4, 5]) == True
 assert is_valid_triangle([5, 10, 25]) == False
 assert count_valid_triangles([[3, 4, 5], [5, 10, 25]]) == 1
 
 triangles = open("input.dat").read().strip().split("\n")
-triangles = [map(int, re.split(r"\s+", triangle.strip())) for triangle in triangles]
-print count_valid_triangles(triangles)
+triangles = [list(map(int, re.split(r"\s+", triangle.strip()))) for triangle in triangles]
+print(count_valid_triangles(triangles))
 
 # https://docs.python.org/3.1/library/itertools.html#recipes
 def grouper(n, iterable, fillvalue=None):
   args = [iter(iterable)] * n
-  return itertools.izip_longest(*args, fillvalue=fillvalue)
+  return itertools.zip_longest(*args, fillvalue=fillvalue)
 
 def count_valid_vertical_triangles(triangles):
   valid_triangles = 0
@@ -37,4 +37,4 @@ def count_valid_vertical_triangles(triangles):
 
 assert count_valid_vertical_triangles([[3, 10, 5], [4, 25, 3], [5, 5, 4]]) == 2
 
-print count_valid_vertical_triangles(triangles)
+print(count_valid_vertical_triangles(triangles))

@@ -33,4 +33,4 @@ def decode(instructions):
 assert decode(["ULL", "RRDDD", "LURDL", "UUUUD"]) == "5DB3"
 
 steps = open("input.dat").read().strip().split("\n")
-print decode(steps)
+print(decode(steps))
