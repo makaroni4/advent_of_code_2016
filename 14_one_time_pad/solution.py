@@ -7,12 +7,19 @@ FIVE_CHAR_PATTERN = re.compile(r"(\w)\1{4}")
 
 def md5_digest(salt, index):
   code = salt + str(index)
-  digest = hashlib.md5()
-  digest.update(code.encode())
-  return digest.hexdigest()
+  return hashlib.md5(code.encode()).hexdigest()
 
-def cache_index(hashes, five_letter_char_indices, five_letter_index_chars, salt, index):
-  hash_str = md5_digest(salt, index)
+def md5_digest_with_stretching(salt, index):
+  code = salt + str(index)
+  digest = hashlib.md5(code.encode()).hexdigest()
+
+  for _ in range(2016):
+    digest = hashlib.md5(digest.encode()).hexdigest()
+
+  return digest
+
+def cache_index(hashes, five_letter_char_indices, five_letter_index_chars, salt, index, hash_func):
+  hash_str = hash_func(salt, index)
   five_chars = set(FIVE_CHAR_PATTERN.findall(hash_str))
 
   for char in five_chars:
@@ -26,14 +33,14 @@ def uncache_index(five_letter_char_indices, five_letter_index_chars, index):
     for char in five_letter_index_chars.pop(index):
       five_letter_char_indices[char].discard(index)
 
-def generate_keys(salt):
+def generate_keys(salt, hash_func):
   hashes = []
   five_letter_char_indices = defaultdict(set)
   five_letter_index_chars = defaultdict(set)
   found_keys = 0
 
   for i in range(0, 1001):
-    cache_index(hashes, five_letter_char_indices, five_letter_index_chars, salt, i)
+    cache_index(hashes, five_letter_char_indices, five_letter_index_chars, salt, i, hash_func)
 
   i = 0
   while found_keys < 64:
@@ -49,10 +56,12 @@ def generate_keys(salt):
 
     i += 1
 
-    cache_index(hashes, five_letter_char_indices, five_letter_index_chars, salt, 1000 + i)
+    cache_index(hashes, five_letter_char_indices, five_letter_index_chars, salt, 1000 + i, hash_func)
 
   return i - 1
 
-assert generate_keys("abc") == 22728
+assert generate_keys("abc", md5_digest) == 22728
+assert generate_keys("abc", md5_digest_with_stretching) == 22551
 
-print(generate_keys("ngcjuoqr"))
+print(generate_keys("ngcjuoqr", md5_digest))
+print(generate_keys("ngcjuoqr", md5_digest_with_stretching))
