@@ -36,3 +36,6 @@ assert find_waiting_time([[5, 4], [2, 1]]) == 5
 
 init_positions = read_init_positions("input.dat")
 print(find_waiting_time(init_positions))
+
+init_positions.append([11, 0])
+print(find_waiting_time(init_positions))
