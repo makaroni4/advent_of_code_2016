@@ -46,4 +46,4 @@ def hack_checksum(initial_state, disk_size):
 
 assert hack_checksum("10000", 20) == "01100"
 
-print(hack_checksum("11110010111001001", 272))
+print(hack_checksum("11110010111001001", 35651584))
