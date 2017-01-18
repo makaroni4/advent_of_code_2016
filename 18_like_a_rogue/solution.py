@@ -37,3 +37,6 @@ assert count_safe_tiles(["..^^.", ".^^^^", "^^..^"]) == 6
 first_row = open("input.dat").read().strip()
 rows = make_rows(first_row, 40)
 print(count_safe_tiles(rows))
+
+rows = make_rows(first_row, 400000)
+print(count_safe_tiles(rows))
