@@ -28,3 +28,11 @@ def move_x_to_y(str, x, y):
   return "".join(chars)
 
 assert move_x_to_y("bcdea", 1, 4) == "bdeac"
+
+def rotate(str, direction, steps):
+  n = -1 * direction * steps
+
+  return str[n:] + str[:n]
+
+assert rotate("abcd", 1, 1) == "dabc"
+assert rotate("abcd", -1, 1) == "bcda"
