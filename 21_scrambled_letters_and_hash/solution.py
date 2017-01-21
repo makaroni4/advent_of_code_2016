@@ -19,6 +19,7 @@ def reverse(str, x, y):
 
 assert reverse("abcde", 0, 4) == "edcba"
 assert reverse("abcde", 1, 3) == "adcbe"
+assert reverse("fbagdche", 1, 3) == "fgabdche"
 
 def move_x_to_y(str, x, y):
   chars = list(str)
@@ -50,6 +51,20 @@ def rotate_pos(str, letter):
 
 assert rotate_pos("ecabd", "d") == "decab"
 
+def unrotate_pos(str, letter):
+  i = 0
+  while i <= len(str):
+    initial_str = rotate(str, -1, i)
+
+    if rotate_pos(initial_str, letter) == str:
+      return initial_str
+
+    i += 1
+
+  raise ValueError("Can't unrotate " + str + " for " + letter)
+
+assert unrotate_pos("decab", "d") == "ecabd"
+
 def process_command(str, command):
   command_words = command.split(" ")
 
@@ -76,6 +91,32 @@ def process_command(str, command):
   else:
     raise ValueError("Wrong command " + command)
 
+def process_command_reverse(str, command):
+  command_words = command.split(" ")
+
+  if command_words[0] == "swap":
+    if command_words[1] == "position":
+      return swap_x_and_y(str, int(command_words[2]), int(command_words[5]))
+    elif command_words[1] == "letter":
+      return swap_letter_x_and_y(str, command_words[2], command_words[5])
+    else:
+      raise ValueError("Wrong command " + command)
+  elif command_words[0] == "rotate":
+    if command_words[1] == "based":
+      return unrotate_pos(str, command_words[6])
+    elif command_words[1] == "left":
+      return rotate(str, 1, int(command_words[2]))
+    elif command_words[1] == "right":
+      return rotate(str, -1, int(command_words[2]))
+    else:
+      raise ValueError("Wrong command " + command)
+  elif command_words[0] == "reverse":
+    return reverse(str, int(command_words[2]), int(command_words[4]))
+  elif command_words[0] == "move":
+    return move_x_to_y(str, int(command_words[5]), int(command_words[2]))
+  else:
+    raise ValueError("Wrong command " + command)
+
 def scramble(str, commands_file):
   commands = open(commands_file).read().strip().split("\n")
 
@@ -86,4 +127,14 @@ def scramble(str, commands_file):
 
 assert scramble("abcde", "test_input.dat") == "decab"
 
+def unscramble(str, commands_file):
+  commands = open(commands_file).read().strip().split("\n")
+  commands.reverse()
+
+  for command in commands:
+    str = process_command_reverse(str, command)
+
+  return str
+
 print scramble("abcdefgh", "input.dat")
+print unscramble("fbgdceah", "input.dat")
