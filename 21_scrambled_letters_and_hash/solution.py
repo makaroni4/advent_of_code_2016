@@ -20,5 +20,11 @@ def reverse(str, x, y):
 assert reverse("abcde", 0, 4) == "edcba"
 assert reverse("abcde", 1, 3) == "adcbe"
 
+def move_x_to_y(str, x, y):
+  chars = list(str)
+  char = chars.pop(x)
+  chars.insert(y, char)
 
+  return "".join(chars)
 
+assert move_x_to_y("bcdea", 1, 4) == "bdeac"
