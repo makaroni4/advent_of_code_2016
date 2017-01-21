@@ -49,3 +49,41 @@ def rotate_pos(str, letter):
   return rotate(str, 1, steps)
 
 assert rotate_pos("ecabd", "d") == "decab"
+
+def process_command(str, command):
+  command_words = command.split(" ")
+
+  if command_words[0] == "swap":
+    if command_words[1] == "position":
+      return swap_x_and_y(str, int(command_words[2]), int(command_words[5]))
+    elif command_words[1] == "letter":
+      return swap_letter_x_and_y(str, command_words[2], command_words[5])
+    else:
+      raise ValueError("Wrong command " + command)
+  elif command_words[0] == "rotate":
+    if command_words[1] == "based":
+      return rotate_pos(str, command_words[6])
+    elif command_words[1] == "left":
+      return rotate(str, -1, int(command_words[2]))
+    elif command_words[1] == "right":
+      return rotate(str, 1, int(command_words[2]))
+    else:
+      raise ValueError("Wrong command " + command)
+  elif command_words[0] == "reverse":
+    return reverse(str, int(command_words[2]), int(command_words[4]))
+  elif command_words[0] == "move":
+    return move_x_to_y(str, int(command_words[2]), int(command_words[5]))
+  else:
+    raise ValueError("Wrong command " + command)
+
+def scramble(str, commands_file):
+  commands = open(commands_file).read().strip().split("\n")
+
+  for command in commands:
+    str = process_command(str, command)
+
+  return str
+
+assert scramble("abcde", "test_input.dat") == "decab"
+
+print scramble("abcdefgh", "input.dat")
