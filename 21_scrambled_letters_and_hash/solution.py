@@ -30,9 +30,22 @@ def move_x_to_y(str, x, y):
 assert move_x_to_y("bcdea", 1, 4) == "bdeac"
 
 def rotate(str, direction, steps):
+  steps = steps % len(str)
+
   n = -1 * direction * steps
 
   return str[n:] + str[:n]
 
 assert rotate("abcd", 1, 1) == "dabc"
 assert rotate("abcd", -1, 1) == "bcda"
+
+def rotate_pos(str, letter):
+  letter_pos = str.find(letter)
+  steps = 1 + letter_pos
+
+  if letter_pos >= 4:
+    steps += 1
+
+  return rotate(str, 1, steps)
+
+assert rotate_pos("ecabd", "d") == "decab"
