@@ -1,31 +1,25 @@
 from collections import deque
 from collections import defaultdict
 from itertools import combinations
+import copy
 
-def state_key(elevator_position, microchip_positions, generator_positions):
+def flatten(l):
+  return [item for sublist in l for item in sublist]
+
+def state_key(elevator_position, floors):
   key = str(elevator_position)
-  for k, v in sorted(microchip_positions.items()):
-    key += k + str(v)
+  elements_positions = {}
 
-  for k, v in sorted(generator_positions.items()):
+  for floor, devices in floors.items():
+    for device in devices:
+      elements_positions[device] = floor
+
+  for k, v in sorted(elements_positions.items()):
     key += k + str(v)
 
   return key
 
-assert state_key(0, {"a": 1, "b": 2}, {"c": 3, "d": 4}) == "0a1b2c3d4"
-
-def floors_positions(microchip_positions, generator_positions):
-  floors = defaultdict(list)
-
-  for k, v in microchip_positions.items():
-    floors[v].append(k)
-
-  for k, v in generator_positions.items():
-    floors[v].append(k)
-
-  return floors
-
-assert floors_positions({"a": 1, "b": 2}, {"c": 1, "d": 2}) == {1: ["a", "c"], 2: ["b", "d"]}
+assert state_key(0, {1: ["a"], 2: ["b"], 3: ["c", "d"]}) == "0a1b2c3d3"
 
 def is_valid_floor_state(devices):
   floor_devices = defaultdict(list)
@@ -49,39 +43,63 @@ assert is_valid_floor_state(["HM", "LM"]) == True
 assert is_valid_floor_state(["HG", "HM"]) == True
 assert is_valid_floor_state(["HG", "HM", "LG"]) == True
 assert is_valid_floor_state(["HG", "LM", "LG"]) == True
+assert is_valid_floor_state(["HG", "LM", "LG", "HM"]) == True
 assert is_valid_floor_state(["HG", "LM"]) == False
 
-def find_min_steps(microchip_positions, generator_positions):
-  seen_states = set([state_key(0, microchip_positions, generator_positions)])
+def find_min_steps(floors):
+  total_elements = len(flatten(floors.values()))
+  seen_states = set([state_key(0, floors)])
 
   min_steps = -1
-  queue = deque([[0, 0, microchip_positions, generator_positions]])
+  queue = deque([[0, 0, floors]])
 
   while len(queue) > 0:
-    steps, elevator_position, microchip_positions, generator_positions = queue.popleft()
-    floors = floors_positions(microchip_positions, generator_positions)
+    steps, elevator_position, floors = queue.popleft()
 
     if min_steps > -1 and steps > min_steps:
       continue
 
-    possible_elevator_passengers = list(combinations(floors[elevator_position], 2)) + floors[elevator_position]
+    if elevator_position == 3 and len(floors[elevator_position]) == total_elements:
+      if min_steps == -1 or min_steps > steps:
+        min_steps = steps
+
+      continue
+
+    possible_elevator_passengers = list(map(list, combinations(floors[elevator_position], 2))) + [[d] for d in floors[elevator_position]]
 
     for passengers in possible_elevator_passengers:
-      if isinstance(passengers, tuple):
+      if len(passengers) == 2:
         pass_1, pass_2 = passengers
         if pass_1[1] != pass_2[1] and pass_1[0] != pass_2[0]:
           continue
 
-        print(passengers)
-        # check move up
-        # check move down
-      else:
-        print(passengers)
-        # check move up
-        # check move down
+      # check move up
+      if elevator_position < 3:
+        if is_valid_floor_state(passengers + floors[elevator_position + 1]) and is_valid_floor_state(list(set(floors[elevator_position]) - set(passengers))):
+          next_floors = copy.deepcopy(floors)
+          for p in passengers:
+            next_floors[elevator_position].remove(p)
+          next_floors[elevator_position + 1] += passengers
+          next_state_key = state_key(elevator_position + 1, next_floors)
 
+          if not next_state_key in seen_states:
+            seen_states.add(next_state_key)
+            queue.append([steps + 1, elevator_position + 1, next_floors])
 
+      # check move down
+      if elevator_position > 0:
+        if is_valid_floor_state(passengers + floors[elevator_position - 1]) and is_valid_floor_state(list(set(floors[elevator_position]) - set(passengers))):
+          next_floors = copy.deepcopy(floors)
+          for p in passengers:
+            next_floors[elevator_position].remove(p)
+          next_floors[elevator_position - 1] += passengers
+          next_state_key = state_key(elevator_position - 1, next_floors)
 
+          if not next_state_key in seen_states:
+            seen_states.add(next_state_key)
+            queue.append([steps + 1, elevator_position - 1, next_floors])
+
+  print(min_steps)
   return min_steps
 
-assert find_min_steps({"HM": 0, "LM": 0}, {"HG": 1, "LG": 2}) == 11
+assert find_min_steps({0: ["HM", "LM"], 1: ["HG"], 2: ["LG"], 3: []}) == 11
