@@ -27,6 +27,30 @@ def floors_positions(microchip_positions, generator_positions):
 
 assert floors_positions({"a": 1, "b": 2}, {"c": 1, "d": 2}) == {1: ["a", "c"], 2: ["b", "d"]}
 
+def is_valid_floor_state(devices):
+  floor_devices = defaultdict(list)
+
+  for device in devices:
+    element, device_type = list(device)
+    floor_devices[device_type].append(element)
+
+  if len(floor_devices) == 1:
+    return True
+
+  microchips = set(floor_devices["M"])
+  generators = set(floor_devices["G"])
+
+  if len(microchips - generators) > 0 and len(generators - microchips) > 0:
+    return False
+
+  return True
+
+assert is_valid_floor_state(["HM", "LM"]) == True
+assert is_valid_floor_state(["HG", "HM"]) == True
+assert is_valid_floor_state(["HG", "HM", "LG"]) == True
+assert is_valid_floor_state(["HG", "LM", "LG"]) == True
+assert is_valid_floor_state(["HG", "LM"]) == False
+
 def find_min_steps(microchip_positions, generator_positions):
   seen_states = set([state_key(0, microchip_positions, generator_positions)])
 
@@ -44,6 +68,10 @@ def find_min_steps(microchip_positions, generator_positions):
 
     for passengers in possible_elevator_passengers:
       if isinstance(passengers, tuple):
+        pass_1, pass_2 = passengers
+        if pass_1[1] != pass_2[1] and pass_1[0] != pass_2[0]:
+          continue
+
         print(passengers)
         # check move up
         # check move down
