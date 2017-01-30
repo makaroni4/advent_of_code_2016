@@ -35,3 +35,5 @@ def find_viable_pairs(nodes):
 
 nodes = read_input("input.dat")
 print(find_viable_pairs(nodes))
+
+print(sorted(list(map(lambda r: r[1], nodes))))
