@@ -43,7 +43,7 @@ def dist(x, y):
 assert dist((1, 2), (6, 7)) == 10
 
 def heuristic(data_node, empty_node):
-  return - (33 - dist(data_node, (0, 0))) * 3 + dist(data_node, empty_node) * 4
+  return dist(data_node, (0, 0))
 
 def reconstruct_path(current, came_from):
   shortest_path = []
@@ -65,7 +65,6 @@ def astar(nodes):
   data_node = (max_x, 0)
   goal = (0, 0)
 
-  closed_set = set()
   came_from = {}
   g_scores = { (data_node, empty_node): 0 }
   open_set = []
@@ -82,11 +81,9 @@ def astar(nodes):
       start_time = time.time()
       max_coord_counter -= 1
 
-    if data_node == goal:
+    if heuristic(data_node, empty_node) == 0:
       shortest_path = reconstruct_path((data_node, empty_node), came_from)
       return len(shortest_path)
-
-    closed_set.add((data_node, empty_node))
 
     for next_step in neighbors:
       next_empty_node = tuple(map(operator.add, empty_node, next_step))
@@ -100,7 +97,7 @@ def astar(nodes):
 
       tentative_g_score = g_scores[(data_node, empty_node)] + 1
 
-      if not (next_data_node, next_empty_node) in closed_set or \
+      if not (next_data_node, next_empty_node) in g_scores or \
         tentative_g_score < g_scores[(next_data_node, next_empty_node)]:
 
         came_from[(next_data_node, next_empty_node)] = (data_node, empty_node)
