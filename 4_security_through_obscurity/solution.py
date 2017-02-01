@@ -1,5 +1,6 @@
 from collections import defaultdict
 import string
+import functools
 
 def chars_dict_compare(i1, i2):
   if i2[1] > i1[1]:
@@ -23,7 +24,7 @@ def check_room(name):
   for char in encrypted_name:
     chars[char] += 1
 
-  chars = sorted(chars.items(), cmp=chars_dict_compare)
+  chars = sorted(chars.items(), key=functools.cmp_to_key(chars_dict_compare))
 
   for index, char in enumerate(check_sum):
     if chars[index][0] != char:
@@ -46,7 +47,7 @@ def count_sector_ids_sum(names):
   return ids_sum
 
 names = open("input.dat").read().strip().split("\n")
-print count_sector_ids_sum(names)
+print(count_sector_ids_sum(names))
 
 ALPHABET = list(string.ascii_lowercase)
 ALPHABET_INDICES = dict(zip(ALPHABET, range(0, 26)))
@@ -77,5 +78,5 @@ assert decipher_name("qzmt-zixmtkozy-ivhz-343[abcde]") == "very encrypted name"
 
 for name in names:
   if decipher_name(name) == "northpole object storage":
-    print name
+    print(name)
 
