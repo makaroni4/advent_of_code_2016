@@ -19,7 +19,7 @@ def decode(signals, most_common=True):
 assert decode(["eedadn" ,"drvtee" ,"eandsr" ,"raavrd" ,"atevrs" ,"tsrnev" ,"sdttsa" ,"rasrtv" ,"nssdts" ,"ntnada" ,"svetve" ,"tesnvt" ,"vntsnd" ,"vrdear" ,"dvrsen" ,"enarar"], True) == "easter"
 
 signals = open("input.dat").read().strip().split("\n")
-print decode(signals, True)
+print(decode(signals, True))
 
 assert decode(["eedadn" ,"drvtee" ,"eandsr" ,"raavrd" ,"atevrs" ,"tsrnev" ,"sdttsa" ,"rasrtv" ,"nssdts" ,"ntnada" ,"svetve" ,"tesnvt" ,"vntsnd" ,"vrdear" ,"dvrsen" ,"enarar"], False) == "advent"
-print decode(signals, False)
+print(decode(signals, False))

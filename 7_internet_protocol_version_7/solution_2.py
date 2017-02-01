@@ -61,4 +61,4 @@ assert is_valid_ip_address("zazbz[bzb]cdb") == True
 assert is_valid_ip_address("xyx[xyx]xyx") == False
 
 ip_addresses = open("input.dat").read().strip().split("\n")
-print sum(map(is_valid_ip_address, ip_addresses))
+print(sum(map(is_valid_ip_address, ip_addresses)))
